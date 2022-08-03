@@ -1,59 +1,49 @@
+import java.util.Arrays;
+
 /**
  * Array based storage for Resumes
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    int size = 0;
 
     void clear() {
-        int storageSize = size();
-        int i = 0;
-        while (i < storageSize) {
+        for (int i = 0; i < size; i++) {
             storage[i] = null;
-            i++;
         }
+        size = 0;
     }
 
     void save(Resume r) {
-        int storageSize = size();
-        int i = 0;
-        while (i < storageSize) {
-            i++;
-        }
-        storage[i] = r;
+        storage[size] = r;
+        size++;
     }
 
     Resume get(String uuid) {
-        int storageSize = size();
-        int i = 0;
-        while (i < storageSize) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].uuid.equals(uuid)) {
                 return storage[i];
             }
-            i++;
         }
         return null;
     }
 
     void delete(String uuid) {
-        int storageSize = size();
         boolean resumeDeleted = false;
-        int i = 0;
-        while (i < storageSize) {
-            if (storage[i].uuid.equals(uuid)) {
+        for (int i = 0; i < size; i++) {
+            if (!resumeDeleted && storage[i].uuid.equals(uuid)) {
                 resumeDeleted = true;
-                break;
             }
-            i++;
-        }
-        if (resumeDeleted) {
-            while (i < storageSize) {
-                if (i + 1 == storageSize) {
+            if (resumeDeleted) {
+                if (i + 1 == size) {
                     storage[i] = null;
                 } else {
                     storage[i] = storage[i + 1];
                 }
-                i++;
             }
+        }
+        if (resumeDeleted) {
+            size--;
         }
     }
 
@@ -61,21 +51,10 @@ public class ArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        int storageSize = size();
-        Resume[] storageForReturn = new Resume[storageSize];
-        int i = 0;
-        while (i < storageSize) {
-            storageForReturn[i] = storage[i];
-            i++;
-        }
-        return storageForReturn;
+        return Arrays.copyOf(storage, size);
     }
 
     int size() {
-        int i = 0;
-        while (i < storage.length && storage[i] != null) {
-            i++;
-        }
-        return i;
+        return size;
     }
 }
